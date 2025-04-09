@@ -84,7 +84,7 @@ Extra Notes: {notes}"""
 
         # OpenAI API call using the updated method for completions
         response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",  # or "gpt-4" if you have access
+    model="gpt-3.5-turbo",  # Use "gpt-4" if you want the latest model (paid version)
     messages=[
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_combined}
@@ -93,7 +93,7 @@ Extra Notes: {notes}"""
     max_tokens=400
 )
 
-        result = response["choices"][0]["message"]["content"].strip()
+result = response["choices"][0]["message"]["content"].strip()
 
 st.markdown("### 🖼️ Final Prompt")
 st.code(result, language="text")
