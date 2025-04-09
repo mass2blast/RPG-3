@@ -86,19 +86,16 @@ Extra Notes: {notes}"""
 if st.button("🎯 Generate Prompt"):
     with st.spinner("Crafting a cinematic prompt..."):
         try:
-            # OpenAI API call using the updated method for completions
-            response = openai.ChatCompletion.create(
+            # OpenAI API call using the new method
+            response = openai.Completion.create(
                 model="gpt-3.5-turbo",  # Use "gpt-4" if you want the latest model (paid version)
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_combined}
-                ],
+                prompt=f"{system_prompt}\n{user_combined}",
                 temperature=0.8,
                 max_tokens=400
             )
 
             # Extract the result correctly from the response
-            result = response['choices'][0]['message']['content'].strip()
+            result = response['choices'][0]['text'].strip()
 
             # Display the result in the app
             st.markdown("### 🖼️ Final Prompt")
