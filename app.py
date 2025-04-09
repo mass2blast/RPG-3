@@ -49,9 +49,8 @@ colors = st.text_input("🌈 Color Palette / Textures", "Moody blues, purple sha
 abstract = st.text_input("💭 Abstract Concept (Optional)", "A metaphor for isolation in a hyper-connected world")
 notes = st.text_area("📝 Extra Notes (Optional)", "Blend cyberpunk neon with noir grain and dramatic backlighting")
 
-if st.button("🎯 Generate Prompt"):
-    with st.spinner("Crafting a cinematic prompt..."):
-        system_prompt = """You are a professional prompt engineer specializing in generating highly detailed, vivid, and imaginative prompts for AI image generation.
+# Define system_prompt here
+system_prompt = """You are a professional prompt engineer specializing in generating highly detailed, vivid, and imaginative prompts for AI image generation.
 
 Your format must always follow this structure:
 [Style] | [Subject/Character] | [Environment] | [Details about action/emotion] | [Color Scheme/Lighting/Texture]
@@ -66,7 +65,8 @@ Follow these rules:
 The goal: craft something a visual artist could bring to life immediately.
 """
 
-        user_combined = f"""Style: {style}
+# Combine the user inputs into a single string
+user_combined = f"""Style: {style}
 Artistic Fusion: {artistic_fusion}
 Subject: {subject}
 Character Details: {character_attributes}
@@ -82,20 +82,27 @@ Color Palette & Texture: {colors}
 Abstract/Conceptual Notes: {abstract}
 Extra Notes: {notes}"""
 
-       # OpenAI API call using the updated method for completions
-response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",  # Use "gpt-4" if you want the latest model (paid version)
-    messages=[
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_combined}
-    ],
-    temperature=0.8,
-    max_tokens=400
-)
+# Button to trigger prompt generation
+if st.button("🎯 Generate Prompt"):
+    with st.spinner("Crafting a cinematic prompt..."):
+        try:
+            # OpenAI API call using the updated method for completions
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",  # Use "gpt-4" if you want the latest model (paid version)
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_combined}
+                ],
+                temperature=0.8,
+                max_tokens=400
+            )
 
-# Correcting the result extraction to access the message content correctly
-result = response['choices'][0]['message']['content'].strip()
+            # Extract the result correctly from the response
+            result = response['choices'][0]['message']['content'].strip()
 
-# Display the result
-st.markdown("### 🖼️ Final Prompt")
-st.code(result, language="text")
+            # Display the result in the app
+            st.markdown("### 🖼️ Final Prompt")
+            st.code(result, language="text")
+
+        except Exception as e:
+            st.error(f"Error: {e}")
